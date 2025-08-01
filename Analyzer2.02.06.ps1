@@ -10,36 +10,7 @@
 
 .Notes  
     Author: Dan Felman/HP Inc
-    11/30/2022 - initial release 1.00.01
-    05/22/2025 - 1.01.00 - improved fidelity to HPIA results, added support for Windows 24H2
-    05/27/2025 - 1.01.01 - improved performance by limiting PnP driver search from system
-    05/27/2025 - 1.01.02 - improved performance by limiting when to search for UWP apps (UWP = true in Get-SoftpaqList returns)
-    05/27/2025 - 1.01.03 - cleanup of code, slight perf improvement
-    05/27/2025 - 1.01.04 - ...
-    05/29/2025 - 1.01.05 - making CSV and JSON output standard, adding -ca|category support for BIOS and/or Driver categories only
-    05/30/2025 - 1.01.06 - moved all init to Initialize-Environment function
-    05/30/2025 - 2.00.00 - added support for Softpaq download options creating an HPIA repository in the process
-    06/02/2025 - 2.00.01 - simplified code, created separate analyze functions for BIOS, Driver, Software
-                         - moved initialization to Initialize-Environment function, created script config table for common paths, constants, etc.
-    06/02/2025 - 2.00.02 - code cleanup and simplification
-    06/04/2025 - 2.00.03 - further code optimization and performance improvements. Added -SubCategory driver command line option
-    06/06/2025 - 2.00.04 - Rewrote Analyzer.csv output with ExportTo-CSV PS command
-    06/18/2025 - 2.01.00 - Added -Action 'Scan'|'Download'|'CreateRepo' parameter to specify the action to perform
-                            moved $Links setup to Initialize-Environment()
-                            Removed -CreateRepo parameter, replaced with -Action 'CreateRepo' to create a repository, fixed issue - added Invoke-RepositorySync
-                            removed '.' output to log file - will only appear in console output unless -NoDots is specified
-                            rename $ExtractPath to $ActionPath option
-    06/18/2025 - 2.01.01 - remove console output for  > initialize-DownloadFolder() function - now only to log if $DebugOut is specified
-    06/23/2025 - 2.01.02 - moved CSV and JSON output to generate for any action, not just 'Scan'
-                            Add -CleanOutput option to only show remediation items in the output
-                            Released to GitHub
-    06/25/2025 - 2.01.03 - Added support for Dock driver Softpaqs (typically network) - NOT firmware
-                            Released to GitHub
-    06/25/2025 - 2.01.05 - code cleanup and consolidation
-                            added -Action 'Install' option ; moved final actions (beyond scan) before reporting. 
-                            Fixed glitch with Log file being created in the wrong locations along with CSV and JSON files
-    07/15/2025 - 2.02.05 - Simplified code, many updates, fixed missing UWP flag in Get-SoftpaqList() entry (Miss in CVA file)
-                               
+                           
 .Dependencies
     Requires HP Client Management Script Library
     HP Business class devices (as supported by HPIA and HP CMSL)
@@ -81,7 +52,7 @@
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $false)] [ValidateSet('Scan', 'Download', 'Install', 'CreateRepo')]
+    [Parameter(Mandatory = $false)] [ValidateSet('Scan', 'Download', 'CreateRepo')]
         [string]$Action = 'Scan',
     [Parameter(Mandatory = $false)]
         [string]$ActionPath = "$env:TEMP\HPAnalyzer",
@@ -1883,4 +1854,5 @@ if ( -not $CleanOutput ) { TraceLog -Message "-- Elapsed: [min:sec] $($elapsedTi
 Set-location $CurrLocation
 
 return  $TotalRemediations
+
 # end of script

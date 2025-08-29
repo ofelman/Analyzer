@@ -1,183 +1,96 @@
-# Analyzer
-
-A PowerShell script that analyzes HP business-class PCs to identify available BIOS, Driver, and Software updates (Softpaqs) and provides options to download or create repositories for system maintenance.
+﻿# Analyzer v2.05.05
 
 ## Overview
 
-The HP Softpaq Analyzer script scans supported HP business devices and compares installed components against HP's software repository to identify available updates. It can perform analysis-only scans, download updates, or create HP Image Assistant (HPIA) repositories for deployment.
+Analyzer is a comprehensive PowerShell script designed to analyze HP business PCs and identify available BIOS, driver, and software updates using only the HP Client Management Script Library (CMSL).
+
+## Features
+
+- **System Analysis**: Automatically detects HP platform and identifies available updates
+- **Local Reference File**: Supports a locally provider (massaged) reference file
+- **Multiple Actions**: Scan, Download, Install, or Create HPIA Repository with updates
+- **Categorized Updates**: Filter by BIOS, Driver categories
+- **Subcategory Filtering**: Narrow down driver updates by type (Audio, Chipset, Graphics, Network, Video)
+- **Comprehensive Reporting**: Generates detailed logs in text, CSV, and JSON formats
+- **Debug Support**: Extensive logging and debugging capabilities in a debug file (-d|debug)
 
 ## Prerequisites
 
-- **HP Client Management Script Library (CMSL)** - Required for device identification and Softpaq management
-- **HP Business-class devices** - Must be supported by HPIA and HP CMSL
-- **Internet access** - Required for downloading Softpaq information and files
-- **PowerShell 5.1 or later**
-- **Administrative privileges** (recommended for full functionality)
+### Software Requirements
+- **Operating System**: Windows 10/11 as support by HP CMSL for the platform
+- **PowerShell**: Windows PowerShell 5.1 or PowerShell 7+
+- **HP CMSL**: HP Client Management Script Library module
+- **Platform**: Supported HP business PC
 
-## Installation
+### System Requirements
+- **Network**: Internet connectivity
+- **Privileges**: Administrative rights (required for Install action only)
 
-1. Install HP CMSL if not already installed:
-   ```powershell
-   Install-Module -Name HPCMSL -Force
-   ```
+## Parameter Reference
 
-2. Download the Analyzer script to your desired location
+### -Action [String]
+Specifies the operation to perform:
+- **Scan** (default): Analyze system and display available updates
+- **Download**: Download updates to specified location
+- **Install**: Download and install updates (requires elevation)
+- **CreateRepo**: Create local repository of updates
 
-3. Ensure execution policy allows script execution:
-   ```powershell
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-   ```
+### -ActionPath [String]
+Target directory for download/repository operations
+- **Default**: $env:TEMP\HPAnalyzer
+- **Example**: "C:\HPUpdates"
 
-## Usage
+### -Category [String[]]
+Limit analysis to specific update categories:
+- **BIOS**: System firmware updates
+- **Driver**: Hardware driver updates
+- **Default**: All categories (BIOS, Driver, Software, Utility)
 
-### Basic Syntax
-```powershell
-.\Analyzer2.01.02.ps1 [parameters]
-```
+### -SubCategory [String[]]
+Filter driver updates by subcategory:
+- **Audio**: Audio device drivers
+- **Chipset**: Chipset and system drivers  
+- **Graphics**: Display and graphics drivers
+- **Network**: Network adapter drivers
+- **Video**: Video capture drivers
 
-### Parameters
+### -ReferenceFile [String]
+Specifies a local XML reference file to use for analysis instead of downloading from HP:
+- **Validation**: File must exist, have the proper name and .xml extension
+- **Format**: HP Image Assistant information XML file
+- **Example**: "C:\TEMP\Reference\8b92_64_11.0.24H2.xml"
 
-| Parameter | Type | Description | Default |
-|-----------|------|-------------|---------|
-| `-Action` | String | Action to perform: 'Scan', 'Download', or 'CreateRepo' | 'Scan' |
-| `-ActionPath` | String | Path for downloads or repository creation | `$env:TEMP\HPAnalyzer` |
-| `-Category` | String[] | Filter by categories: 'BIOS', 'Driver' | All categories |
-| `-CleanOutput` | Switch | Show only remediation items in output | False |
-| `-DebugOut` | Switch | Enable detailed debugging information | False |
-| `-NoDots` | Switch | Suppress progress dots during analysis | False |
-| `-RecommendedSoftware` | Switch | Include HP recommended software | False |
-| `-ShowHWID` | Switch | Display matching hardware IDs | False |
-| `-Silent` | Switch | Suppress console output (log file only) | False |
-| `-SubCategory` | String[] | Filter drivers by subcategory: 'Audio', 'Chipset', 'Graphics', 'Network', 'Video' | All subcategories |
-| `-Help` | Switch | Display help information | False |
+## Usage Examples
 
-### Actions
+### Example 1: Basic System Scan
+.\Analyzer.ps1
+**Output**: Displays all available updates for the current system
 
-#### Scan (Default)
-Analyzes the current device and generates reports without downloading files.
-```powershell
-.\Analyzer2.01.02.ps1
-.\Analyzer2.01.02.ps1 -Action Scan
-```
+### Example 2: BIOS-Only Analysis with additional information
+.\Analyzer.ps1 -Category BIOS -Verbose
 
-#### Download
-Scans the device and downloads available Softpaq updates to the specified path.
-```powershell
-.\Analyzer2.01.02.ps1 -Action Download -ActionPath "C:\HP_Updates"
-```
+### Example 3: Download only Graphics Driver Updates
+.\Analyzer.ps1 -Action Download -Category Driver -SubCategory Graphics -ActionPath "C:\GraphicsUpdates"
 
-#### CreateRepo
-Creates an HP Image Assistant repository with the identified updates.
-```powershell
-.\Analyzer2.01.02.ps1 -Action CreateRepo -ActionPath "C:\HPIA_Repo"
-```
+### Example 4: Analyze and create an HPIA Repository with Softpaqs
+.\Analyzer.ps1 -Action CreateRepo -ActionPath "\\Server\HPRepository" -Category BIOS,Driver
 
-## Examples
+### Example 5: Automated Installation of 'Network' drivers only -# Run as Administrator REQUIRED
+.\Analyzer.ps1 -Action Install -Category Driver -SubCategory Network -Verbose
 
-### Basic device scan
-```powershell
-.\Analyzer2.01.02.ps1
-```
-
-### Scan for BIOS updates only
-```powershell
-.\Analyzer2.01.02.ps1 -Category BIOS
-```
-
-### Scan for driver updates showing matching driver hardware IDs
-```powershell
-.\Analyzer2.01.02.ps1 -Category Driver -ShowHWID
-```
-
-### Download graphics and network drivers
-```powershell
-.\Analyzer2.01.02.ps1 -Action Download -SubCategory Graphics,Network -ActionPath "C:\Drivers"
-```
-
-### Include HP recommended software
-```powershell
-.\Analyzer2.01.02.ps1 -RecommendedSoftware
-```
-
-### Silent operation with debug logging
-```powershell
-.\Analyzer2.01.02.ps1 -Silent -DebugOut
-```
-
-### Clean output showing only needed updates
-```powershell
-.\Analyzer2.01.02.ps1 -CleanOutput
-```
+### Example 6: Report using a Local Reference File (potentially modified or saved as needed)
+.\Analyzer.ps1 -Action Scan -ReferenceFile "C:\TEMP\Reference\8b92_64_11.0.24H2.xml"
 
 ## Output Files
 
-The script generates several output files in the current directory:
+The script generates several output files with timestamps:
 
-### Log File
-- **Format**: `Analyzer-YYYYMMDD-HHMM.log`
-- **Content**: Detailed execution log with timestamps and debug information
+| File Type       | Naming Convention                  | Description                             |
+|-----------------|------------------------------------|-----------------------------------------|
+| **Log File**    | `Analyzer-YYYYMMDD-HHMM.txt`       | Human-readable execution log            |
+| **CSV Report**  | `Analyzer-YYYYMMDD-HHMM.csv`       | Structured data for sprehsheet analysis |
+| **JSON Report** | `Analyzer-YYYYMMDD-HHMM.json`      | Machine-readable results                |
+| **Debug Log**   | `Analyzer-YYYYMMDD-HHMM-Debug.log` | Detailed debug information (with -Debug)|
 
-### CSV Report
-- **Format**: `Analyzer-YYYYMMDD-HHMM.csv`
-- **Content**: Structured data of all analyzed Softpaqs with status codes
-- **Columns**: SoftpaqID, SoftpaqName, SoftpaqDate, SoftpaqVersion, InstallVersion, Status, Category, DeviceClass, ReleaseType, CVAHWID, UWP information, URL
-
-### JSON Report
-- **Format**: `Analyzer-YYYYMMDD-HHMM.json` 
-- **Content**: Machine-readable output suitable for automation and integration
-- **Structure**: Platform information and remediation details
-
-## Recommended HP Software
-
-When using the `-RecommendedSoftware` parameter, the script will include analysis for:
-- HP Notifications
-- HP Power Manager  
-- HP Smart Health
-- HP Programmable Key
-- HP Auto Lock and Awake
-- System Default Settings
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Failed to get HP Device Product ID"**
-   - Ensure HP CMSL is installed and up to date
-   - Verify the device is an HP business-class PC supported by CMSL
-
-2. **"Failed to retrieve Softpaq list"**
-   - Check internet connectivity
-   - Verify firewall/proxy settings allow HP repository access
-
-3. **CSV file locked error**
-   - Close any applications that may have the CSV file open
-   - Ensure write permissions to the script directory
-
-### Debug Mode
-Use `-DebugOut` parameter for detailed troubleshooting information:
-```powershell
-.\Analyzer2.01.02.ps1 -DebugOut
-```
-
-## Version History
-
-- **2.01.02** (Current) - initial Github release
-
-## Return Values
-
-The script returns the total number of remediations (updates) found:
-- `0` = No updates needed
-- `>0` = Number of available updates
-
-## platform Support
-
-This script is designed for HP business-class devices and requires HP CMSL. For issues related to:
-- **HP CMSL**: Consult HP documentation and support resources
-- **Device compatibility**: Verify device is supported by HP Image Assistant
-- **Script functionality**: Review debug logs and error messages
-
-## Author
-
-**Dan Felman/HP Inc**
-
-Current version: June 23, 2025
+*Last Updated: August 29, 2025*
+*HP Platform Analyzer v2.05.05*

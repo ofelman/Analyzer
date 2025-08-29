@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Analyzer - An HP Business System Update Detection and Update Tool
+    Analyzer - An Update Detection and Update Script
 
 .DESCRIPTION
     This PowerShell script analyzes HP business PCs to detect available BIOS, driver, and software updates
@@ -1535,3 +1535,4 @@ $JsonOut | ConvertTo-Json -Depth 10 |
 
 # Restore the current location
 Set-location $CurrLocation
+

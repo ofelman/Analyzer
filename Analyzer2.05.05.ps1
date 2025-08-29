@@ -85,7 +85,7 @@
     Author         : HP Inc.
     Version        : 2.05.05
     Date Created   : [Original Creation Date]
-    Last Modified  : August 28, 2025
+    Last Modified  : August 29, 2025
 
     Prerequisites:
     - Windows PowerShell 5.1 or PowerShell 7+
@@ -1480,4 +1480,5 @@ $JsonOut | ConvertTo-Json -Depth 10 |
 
 # Restore the current location
 Set-location $CurrLocation
+
 

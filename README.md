@@ -9,6 +9,7 @@ A PowerShell script for analyzing HP business PCs and managing BIOS, driver, and
 - **CVE Security Checking**: Reports on security vulnerabilities fixed by reported Softpaqs
 - **Multiple Actions**: Scan, Download, Install, or Create HPIA Repository
 - **Filtering Options**: Filter by category (BIOS/Driver) and type of Driver
+- **CVE Report Option**: Report on found Softpaqs' CVE fixes
 - **Comprehensive Reports**: Generates TXT, CSV, and JSON output files
 
 ## Quick Start

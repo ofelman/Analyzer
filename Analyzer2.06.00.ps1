@@ -85,62 +85,7 @@
     Author         : HP Inc.
     Version        : 2.06.00
     Date Created   : [Original Creation Date]
-    Last Modified  : August 28, 2025
-
-    11/30/2022 - initial release 1.00.01
-    05/22/2025 - 1.01.00 - improved fidelity to HPIA results, added support for Windows 24H2
-    05/27/2025 - 1.01.01 - improved performance by limiting PnP driver search from system
-    05/27/2025 - 1.01.02 - improved performance by limiting when to search for UWP apps (UWP = true in Get-SoftpaqList returns)
-    05/27/2025 - 1.01.03 - cleanup of code, slight perf improvement
-    05/27/2025 - 1.01.04 - ...
-    05/29/2025 - 1.01.05 - making CSV and JSON output standard, adding -ca|category support for BIOS and/or Driver categories only
-    05/30/2025 - 1.01.06 - moved all init to Initialize-Environment function
-    05/30/2025 - 2.00.00 - added support for Softpaq download options creating an HPIA repository in the process
-    06/02/2025 - 2.00.01 - simplified code, created separate analyze functions for BIOS, Driver, Software
-                         - moved initialization to Initialize-Environment function, created script config table for common paths, constants, etc.
-    06/02/2025 - 2.00.02 - code cleanup and simplification
-    06/04/2025 - 2.00.03 - further code optimization and performance improvements. Added -SubCategory driver command line option
-    06/06/2025 - 2.00.04 - Rewrote Analyzer.csv output with ExportTo-CSV PS command
-    06/18/2025 - 2.01.00 - Added -Action 'Scan'|'Download'|'CreateRepo' parameter to specify the action to perform
-                            moved $Links setup to Initialize-Environment()
-                            Removed -CreateRepo parameter, replaced with -Action 'CreateRepo' to create a repository, fixed issue - added Invoke-RepositorySync
-                            removed '.' output to log file - will only appear in console output unless -NoDots is specified
-                            rename $ExtractPath to $ActionPath option
-    06/18/2025 - 2.01.01 - remove console output for  > initialize-DownloadFolder() function - now only to log if $DebugOut is specified
-    06/23/2025 - 2.01.02 - moved CSV and JSON output to generate for any action, not just 'Scan'
-                            Add -CleanOutput option to only show remediation items in the output
-                            Released to GitHub
-    06/25/2025 - 2.01.03 - Added support for Dock driver Softpaqs (typically network) - NOT firmware
-                            Released to GitHub
-    06/25/2025 - 2.01.05 - code cleanup and consolidation
-                            added -Action 'Install' option ; moved final actions (beyond scan) before reporting. 
-                            Fixed glitch with Log file being created in the wrong locations along with CSV and JSON files
-    07/15/2025 - 2.02.05 - Simplified code, many updates, fixed missing UWP flag in Get-SoftpaqList() entry (Miss in CVA file)
-    08/01/2025 - 2.02.06 - Major changes, Release to GitHub
-    08/05/2025 - 2.03.00 - Initial implementation of 'Install' action, seems to work well with BIOS and Drivers, not alwyas with Software
-    08/07/2025 - 2.03.01 - Moved actions after analysis
-    08/07/2025 - 2.03.03 - added comments when Softpaq is being installed, added filter for MyHP
-                            Improved matching of h/w IDs (Get-HardwareMatch)
-    08/08/2025 - 2.03.04 - improved handling of certain Softpaqs (Realtek HD Audio) using both ACP and PCI entries (only look at PCI type)
-    08/11/2025 - 2.03.05 - Improved Get-HardwareID function handling, Improved logging for driver matching
-    08/12/2025 - 2.03.06 - Folded Get-HardwareMatch() into Find-Driver() function
-    08/12/2025 - 2.04.00 - Improved UWP search handling by also checking local install packages from
-    08/12/2025 - 2.04.01 - improved handling of driver versions up to date but reference file version is not
-    08/12/2025 - 2.04.02 - fix report when multiple drivers are found for a Softpaq - just select one
-    08/18/2025 - 2.04.03 - Added platform being analyzed to debug file. Clean up function Get-SoftpaqFiles (used by Download and CreateRepo)
-                            now downloading exe files to the correct location. Fixed Install action to properly handle paths with " "
-    08/26/2025 - 2.05.02 - Added support for local -ReferenceFile XML file to be used instead of downloading from HP site
-    08/27/2025 - 2.05.03 - Updated Find-Driver function to improve driver matching logic (Issue w/Realtek HD Driver on AMD laptop),
-                            fixed issue with cache directory not being created on first use, added .DISCLAIMER section
-    08/27/2025 - 2.05.04 - Fixed issue with using -ReferenceFile parameter (introduced w/2.05.02), added -ReferenceFile option to -Help
-    08/28/2025 - 2.05.05 - Improved logging of CSV Drivers, 
-                            added DetailFile path info to debug output (-Debug option), 
-                            improved debug info of matched drivers, 
-                            added some install error return messages,
-                            output lines now include more detailed information about the action results.
-    08/28/2025 - 2.06.00 - Added ability to report on CVE fixes for Softpaqs that include CVE information in the XML reference file.
-                            Added -CVECheck switch to enable CVE checking.
-                            Added CVE information to CSV and JSON output files.
+    Last Modified  : September 4, 2025
 
     Prerequisites:
     - Windows PowerShell 5.1 or PowerShell 7+
@@ -1599,3 +1544,4 @@ $JsonOut | ConvertTo-Json -Depth 10 |
 
 # Restore the current location
 Set-location $CurrLocation
+

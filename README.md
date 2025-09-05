@@ -20,35 +20,35 @@ A PowerShell script for analyzing HP business PCs and managing BIOS, driver, and
 
 `powershell
 Install-Module -Name HPCMSL -Force
-`
+
 
 ### Basic Usage
 
 `powershell
 # Basic system scan
-.\Analyzer2.06.00.ps1
+.\Analyzer.ps1
 
 # Scan with CVE checking (NEW in v2.06.00)
-.\Analyzer2.06.00.ps1 -CVECheck
+.\Analyzer.ps1 -CVECheck
 
-# Download all updates to specific path
-.\Analyzer2.06.00.ps1 -Action Download -ActionPath \"C:\HPUpdates\"
+# Scan and Download all updates to specific path
+.\Analyzer.ps1 -Action Download -ActionPath "C:\HPUpdates"
 
-# Install BIOS updates only
-.\Analyzer2.06.00.ps1 -Action Install -Category BIOS
+# Scan and Install BIOS updates only
+.\Analyzer.ps1 -Action Install -Category BIOS
 `
 
 ## Parameters
 
-| Parameter      | Description                                              | Example |
-|----------------|----------------------------------------------------------|---------|
-| -Action        | Action to perform: Scan, Download, Install, CreateRepo   | -Action Download |
-| -Category      | Filter by BIOS or Driver                                 | -Category BIOS,Driver |
-| -CVECheck      | Enable CVE vulnerability checking                        | -CVECheck |
-| -SubCategory   | Filter drivers: Audio, Chipset, Graphics, Network, Video | -SubCategory Graphics |
-| -ReferenceFile | Use local XML reference file                             | -ReferenceFile "C:\8b92_64_11.0.24H2.xml" |
-| -Verbose       | Provide additional information to console, execution log | - Verbose
-| -Debug         | write debug information to a debug log file              | - Debug
+| Parameter       | Description                                              | Example |
+|-----------------|----------------------------------------------------------|---------|
+| -Action         | Action to perform: Scan, Download, Install, CreateRepo   | -Action Download |
+| -Category       | Filter by BIOS or Driver                                 | -Category BIOS,Driver |
+| -CVECheck       | Enable CVE vulnerability checking                        | -CVECheck |
+| -SubCategory    | Filter drivers: Audio, Chipset, Graphics, Network, Video | -SubCategory Graphics |
+| -ReferenceFile  | Use local XML reference file                             | -ReferenceFile "C:\8b92_64_11.0.24H2.xml" |
+| -Verbose        | Provide additional information to console, execution log | - Verbose
+| -Debug          | write debug information to a debug log file              | - Debug
 
 ## What's New in v2.06.00
 
